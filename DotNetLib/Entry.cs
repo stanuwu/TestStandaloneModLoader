@@ -9,9 +9,11 @@ using Cpp2IL.Core.Api;
 using Cpp2IL.Core.InstructionSets;
 using Cpp2IL.Core.OutputFormats;
 using Cpp2IL.Core.ProcessingLayers;
+using HarmonyLib;
 using Il2CppInterop.Common;
 using Il2CppInterop.Generator;
 using Il2CppInterop.Generator.Runners;
+using Il2CppInterop.HarmonySupport;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.Startup;
 using LibCpp2IL;
@@ -35,10 +37,14 @@ namespace DotNetLib
 
         private static readonly ILogger _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("Pre");
 
+        private static Harmony HarmonyInstance;
+
         public static int Init(IntPtr arg, int argLength)
         {
             _logger.LogInformation("Runtime Loaded (this is c#)");
             _logger.LogInformation("Initialising");
+
+            HarmonyInstance = new Harmony("DotNetLib");
 
             NativeLibrary.SetDllImportResolver(typeof(IL2CPP).Assembly, DllImportResolver);
 
@@ -48,27 +54,34 @@ namespace DotNetLib
 
             if (!GenerateInteropAssemblies()) return 1;
 
-            Il2CppInteropRuntime.Create(new RuntimeConfiguration
+            var runtime = Il2CppInteropRuntime.Create(new RuntimeConfiguration
                 {
                     UnityVersion = new Version(UnityVersion.Major, UnityVersion.Minor, UnityVersion.Build),
                     DetourProvider = new Il2CppInteropDetourProvider()
                 })
                 .AddLogger(LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("Interop"))
-                .Start();
+                .AddHarmonySupport();
+
+            _logger.LogInformation("Runtime Created");
+
+            Attach();
+
+            _logger.LogInformation("Runtime Starting");
+
+            runtime.Start();
 
             _logger.LogInformation("Runtime Started");
 
-            _logger.LogInformation("Attaching Object to Il2Cpp");
-
-            Attach();
+            var interop = new Il2CppEntryPoint();
+            interop.Init();
 
             return 0;
         }
 
         public static void Attach()
         {
-            var entryPoint = new Il2CppEntryPoint();
-            entryPoint.Init();
+            var baseObject = new BaseObject();
+            baseObject.Init();
         }
 
         private static bool GenerateInteropAssemblies()

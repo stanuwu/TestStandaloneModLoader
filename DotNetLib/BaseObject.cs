@@ -19,14 +19,6 @@ namespace DotNetLib
 
         public void Init()
         {
-            /*
-            ClassInjector.RegisterTypeInIl2Cpp<CheatManager>();
-            Manager = new GameObject("DupontManager");
-            UnityEngine.Object.DontDestroyOnLoad(Manager);
-            Manager.hideFlags |= HideFlags.HideAndDontSave;
-            Manager.AddComponent<CheatManager>();
-            Console.WriteLine("Hooked");
-            */
         }
     }
 }

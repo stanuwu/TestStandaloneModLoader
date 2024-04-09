@@ -1,8 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Il2CppInterop.Runtime;
 using Microsoft.Extensions.Logging;
-using UnityEngine;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace DotNetLib
 {
@@ -32,7 +30,7 @@ namespace DotNetLib
 
                 if (methodName == "Internal_ActiveSceneChanged")
                 {
-                    // unhook = true;
+                    unhook = true;
                     _logger.LogWarning("Loading Objects");
                     Instance.Execute();
                 }
@@ -55,8 +53,7 @@ namespace DotNetLib
 
         public virtual void Execute()
         {
-            var gameObject = new GameObject("Test Game Object");
-            _logger.LogError($"Created: ${gameObject.name}");
+            // executes on first scene change
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
