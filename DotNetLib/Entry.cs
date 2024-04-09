@@ -13,11 +13,9 @@ using Il2CppInterop.Common;
 using Il2CppInterop.Generator;
 using Il2CppInterop.Generator.Runners;
 using Il2CppInterop.Runtime;
-using Il2CppInterop.Runtime.Injection;
 using Il2CppInterop.Runtime.Startup;
 using LibCpp2IL;
 using Microsoft.Extensions.Logging;
-using Thread = Il2CppSystem.Threading.Thread;
 
 namespace DotNetLib
 {
@@ -28,10 +26,8 @@ namespace DotNetLib
 
         private const string GameAssemblyPath = "./GameAssembly.dll";
         private const string DecryptedMetaPath = "./decrypted-metadata.dat";
-        private const string DummyDllPath = "./Il2CppDumper/DummyDll";
         private const string InteropDllsPath = "./InteropDlls";
         private const string UnityLibsPath = "./UnityEngine";
-
         private const string HashPath = "./AssemblyHash";
 
         // 2021, 3, 14, 57736
@@ -62,27 +58,17 @@ namespace DotNetLib
 
             _logger.LogInformation("Runtime Started");
 
-            Thread.Sleep(1000);
+            _logger.LogInformation("Attaching Object to Il2Cpp");
 
-            _logger.LogInformation("IL2CPP Loading Finished, Loading Cheat...");
-
-            StartCheat();
+            Attach();
 
             return 0;
         }
 
-        private static void StartCheat()
+        public static void Attach()
         {
-            // Start Cheat
-            Console.WriteLine("Hooking Cheat");
-            ClassInjector.RegisterTypeInIl2Cpp<CheatManager>();
-            /*
-            var dupont = new GameObject("dupont chemical plant");
-            Object.DontDestroyOnLoad(dupont);
-            dupont.hideFlags |= HideFlags.HideAndDontSave;
-            dupont.AddComponent<CheatManager>();
-            Console.WriteLine("Hooked");
-            */
+            var entryPoint = new Il2CppEntryPoint();
+            entryPoint.Init();
         }
 
         private static bool GenerateInteropAssemblies()
@@ -152,6 +138,8 @@ namespace DotNetLib
         // Taken From https://github.com/BepInEx/BepInEx/blob/master/Runtimes/Unity/BepInEx.Unity.IL2CPP/Il2CppInteropManager.cs
         private static IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
+            _logger.LogWarning($"!! Resolving Dll: {libraryName}");
+
             if (libraryName == "GameAssembly") return NativeLibrary.Load(GameAssemblyPath, assembly, searchPath);
 
             return IntPtr.Zero;
@@ -161,9 +149,21 @@ namespace DotNetLib
         private static Assembly ResolveInteropAssemblies(object sender, ResolveEventArgs args)
         {
             var assemblyName = new AssemblyName(args.Name);
-            return TryResolveDllAssembly(assemblyName, InteropDllsPath, out var foundAssembly)
+
+            _logger.LogWarning($"!! Resolving Assembly: {assemblyName}");
+
+            var resolved = TryResolveDllAssembly(assemblyName, InteropDllsPath, out var foundAssembly)
                 ? foundAssembly
                 : null;
+
+            if (resolved == null)
+                resolved = TryResolveDllAssembly(assemblyName, "./", out var foundAssembly2)
+                    ? foundAssembly2
+                    : null;
+
+            if (resolved == null) _logger.LogError("ASSEMBLY FAILED TO RESOLVE (NULL)");
+
+            return resolved;
         }
 
         // Taken From https://github.com/BepInEx/BepInEx/blob/master/BepInEx.Core/Utility.cs
@@ -199,6 +199,8 @@ namespace DotNetLib
                 {
                     var path = Path.Combine(subDirectory, potentialPath);
 
+                    _logger.LogWarning($"Attempting Load: {path}");
+
                     if (!File.Exists(path))
                         continue;
 
@@ -221,7 +223,7 @@ namespace DotNetLib
         // Abbreviated From https://github.com/BepInEx/BepInEx/blob/master/Runtimes/Unity/BepInEx.Unity.IL2CPP/Il2CppInteropManager.cs
         private static bool CheckIfGenerationRequired()
         {
-            if (!Directory.Exists(InteropDllsPath))
+            if (!Directory.Exists(InteropDllsPath) || Directory.GetFiles(InteropDllsPath).Length == 0)
                 return true;
 
             if (!File.Exists(HashPath))

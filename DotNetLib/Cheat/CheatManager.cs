@@ -11,10 +11,12 @@ namespace DotNetLib
 
         private void Update()
         {
-            foreach (var playerMoveC in FindObjectsOfType<Player_move_c>())
+            foreach (var weaponSounds in FindObjectsOfType<WeaponSounds>())
             {
-                if (playerMoveC == null) continue;
-                Console.WriteLine(playerMoveC.nickLabel);
+                if (weaponSounds == null) continue;
+                if (weaponSounds.prop_Player_move_c_0 == null) continue;
+                if (weaponSounds.prop_Player_move_c_0.nickLabel.text != "1111") continue;
+                weaponSounds.range = 99999f;
             }
         }
     }
