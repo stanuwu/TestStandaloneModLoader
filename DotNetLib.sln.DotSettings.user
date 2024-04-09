@@ -1,0 +1,42 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs2_005CAssembly_002DCSharp_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs2_005CIl2Cppmscorlib_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs2_005CUnityEngine_002ECoreModule_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs2_005CUnityEngine_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs2_005CUnityEngine_002ETextRenderingModule_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CAsmResolver_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CAsmResolver_002EDotNet_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CAsmResolver_002EPE_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CAsmResolver_002EPE_002EFile_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CAssetRipper_002ECIL_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CAssetRipper_002EPrimitives_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CBepInEx_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005Ccapstone_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CCommandLine_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CCpp2IL_002ECore_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CCpp2IL_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CCpp2IL_002Eexe/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CDisarm_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CGee_002EExternal_002ECapstone_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CIced_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CIl2CppInterop_002ECommon_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CIl2CppInterop_002EGenerator_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CIl2CppInterop_002ERuntime_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CIndexRange_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CLibCpp2IL_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CMicrosoft_002EBcl_002EAsyncInterfaces_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CPastel_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CPixelGunCheatInternal_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CStableNameDotNet_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002EBuffers_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002EMemory_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002ENumerics_002EVectors_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002ERuntime_002ECompilerServices_002EUnsafe_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002EText_002EEncodings_002EWeb_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002EText_002EJson_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002EThreading_002ETasks_002EExtensions_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CSystem_002EValueTuple_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CSTan_005CIdeaProjects_005CDotNetLib_005Clibs_005CWasmDisassembler_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\STan\.nuget\packages\monomod.runtimedetour\25.1.0\ref\net6.0\MonoMod.RuntimeDetour.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
