@@ -1,23 +1,19 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using AssetRipper.VersionUtilities;
-using Cpp2IL.Core;
+using AssemblyUnhollower;
 using Cpp2IL.Core.Api;
 using Cpp2IL.Core.InstructionSets;
-using Cpp2IL.Core.OutputFormats;
-using Cpp2IL.Core.ProcessingLayers;
 using HarmonyLib;
 using Il2CppInterop.Common;
-using Il2CppInterop.Generator;
-using Il2CppInterop.Generator.Runners;
-using Il2CppInterop.HarmonySupport;
-using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.Startup;
 using LibCpp2IL;
 using Microsoft.Extensions.Logging;
+using UnhollowerBaseLib;
+using UnhollowerBaseLib.Runtime;
 
 namespace DotNetLib
 {
@@ -26,14 +22,22 @@ namespace DotNetLib
         private const string TRUSTED_PLATFORM_ASSEMBLIES = "TRUSTED_PLATFORM_ASSEMBLIES";
         private const string UnityDownloadUrl = "https://unity.bepinex.dev/libraries/{VERSION}.zip";
 
+        private const string Il2CppConfig =
+            "{\"DumpMethod\": true, \"DumpField\": true, \"DumpProperty\": true, \"DumpAttribute\": true, \"DumpFieldOffset\": true, \"DumpMethodOffset\": true, \"DumpTypeDefIndex\": true, \"GenerateDummyDll\": true, \"GenerateStruct\": true, \"DummyDllAddToken\": true, \"RequireAnyKey\": false, \"ForceIl2CppVersion\": false, \"ForceVersion\": 16, \"ForceDump\": false, \"NoRedirectedPointer\": false }";
+
         private const string GameAssemblyPath = "./GameAssembly.dll";
+        private const string Il2CppDumperPath = "./Dumper/Il2CppDumper.exe";
+        private const string Il2CppConfigPath = "./Dumper/config.json";
         private const string DecryptedMetaPath = "./decrypted-metadata.dat";
+        private const string DummyDllsOutputPath = "./DummyDlls";
+        private const string DummyDllsPath = "./DummyDlls/DummyDll";
         private const string InteropDllsPath = "./InteropDlls";
         private const string UnityLibsPath = "./UnityEngine";
         private const string HashPath = "./AssemblyHash";
+        private const string MsCorLibPath = "./mscorlib.dll";
 
         // 2021, 3, 14, 57736
-        private static readonly UnityVersion UnityVersion = new(2021, 3, 14);
+        private static readonly int[] UnityVersion = { 2021, 3, 14 };
 
         private static readonly ILogger _logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("Pre");
 
@@ -44,36 +48,31 @@ namespace DotNetLib
             _logger.LogInformation("Runtime Loaded (this is c#)");
             _logger.LogInformation("Initialising");
 
-            HarmonyInstance = new Harmony("DotNetLib");
-
-            NativeLibrary.SetDllImportResolver(typeof(IL2CPP).Assembly, DllImportResolver);
+            // HarmonyInstance = new Harmony("DotNetLib");
 
             Environment.SetEnvironmentVariable("IL2CPP_INTEROP_DATABASES_LOCATION", InteropDllsPath);
-            AppDomain.CurrentDomain.AssemblyResolve += ResolveInteropAssemblies;
             InstructionSetRegistry.RegisterInstructionSet<X86InstructionSet>(DefaultInstructionSets.X86_64);
 
+            UnityVersionHandler.Initialize(UnityVersion[0], UnityVersion[1], UnityVersion[2]);
             if (!GenerateInteropAssemblies()) return 1;
+
+            NativeLibrary.SetDllImportResolver(typeof(IL2CPP).Assembly, DllImportResolver);
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveInteropAssemblies;
 
             var runtime = Il2CppInteropRuntime.Create(new RuntimeConfiguration
                 {
-                    UnityVersion = new Version(UnityVersion.Major, UnityVersion.Minor, UnityVersion.Build),
-                    DetourProvider = new Il2CppInteropDetourProvider()
+                    UnityVersion = new Version(UnityVersion[0], UnityVersion[1], UnityVersion[2])
                 })
-                .AddLogger(LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("Interop"))
-                .AddHarmonySupport();
+                .AddLogger(LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger("Interop"));
 
             _logger.LogInformation("Runtime Created");
-
-            Attach();
-
             _logger.LogInformation("Runtime Starting");
 
             runtime.Start();
 
             _logger.LogInformation("Runtime Started");
 
-            var interop = new Il2CppEntryPoint();
-            interop.Init();
+            Attach();
 
             return 0;
         }
@@ -81,7 +80,6 @@ namespace DotNetLib
         public static void Attach()
         {
             var baseObject = new BaseObject();
-            baseObject.Init();
         }
 
         private static bool GenerateInteropAssemblies()
@@ -98,41 +96,29 @@ namespace DotNetLib
                 Directory.CreateDirectory(InteropDllsPath);
                 foreach (var enumerateFile in Directory.EnumerateFiles(InteropDllsPath, "*.dll")) File.Delete(enumerateFile);
 
-                // Load Unity Libs and Download Unity
-                AppDomain.CurrentDomain.AddCecilPlatformAssemblies(UnityLibsPath);
-                DownloadUnity();
-
-                // Dump Dummy Dlls
-                _logger.LogInformation("Running Cpp2Il");
-                Cpp2IlApi.InitializeLibCpp2Il(GameAssemblyPath, DecryptedMetaPath, UnityVersion);
-                List<Cpp2IlProcessingLayer> processingLayers = new() { new AttributeInjectorProcessingLayer() };
-
-                foreach (var cpp2IlProcessingLayer in processingLayers) cpp2IlProcessingLayer.PreProcess(Cpp2IlApi.CurrentAppContext, processingLayers);
-
-                foreach (var cpp2IlProcessingLayer in processingLayers) cpp2IlProcessingLayer.Process(Cpp2IlApi.CurrentAppContext);
-
-                var assemblies = new AsmResolverDummyDllOutputFormat().BuildAssemblies(Cpp2IlApi.CurrentAppContext);
-
-                LibCpp2IlMain.Reset();
-                Cpp2IlApi.CurrentAppContext = null;
+                // Dump Dummy Dll With Il2CppDumper
+                _logger.LogInformation("Running Il2CppDumper");
+                File.WriteAllText(Il2CppConfigPath, Il2CppConfig);
+                Directory.CreateDirectory(DummyDllsOutputPath);
+                var p = Process.Start(Il2CppDumperPath, $"{GameAssemblyPath} {DecryptedMetaPath} {DummyDllsOutputPath}");
+                while (!p.HasExited) Thread.Sleep(50);
+                p.CloseMainWindow();
+                p.Close();
+                _logger.LogInformation("Dumped Dummy Assemblies");
+                _logger.LogInformation("Loading");
 
                 // Load Dumped Assemblies
-                var cecilAssemblies = new AsmToCecilConverter(assemblies).ConvertAll();
-                var opts = new GeneratorOptions
+
+                var opts = new UnhollowerOptions
                 {
-                    GameAssemblyPath = GameAssemblyPath,
-                    Source = cecilAssemblies,
+                    SourceDir = DummyDllsPath,
                     OutputDir = InteropDllsPath,
-                    UnityBaseLibsDir = UnityLibsPath
+                    MscorlibPath = MsCorLibPath
                 };
 
                 _logger.LogInformation("Generating Interop Assemblies");
 
-                Il2CppInteropGenerator.Create(opts).AddLogger(_logger)
-                    .AddInteropAssemblyGenerator()
-                    .Run();
-
-                cecilAssemblies.ForEach(x => x.Dispose());
+                Program.Main(opts);
 
                 // Write Hash
                 File.WriteAllText(HashPath, ComputeHash());
@@ -255,7 +241,7 @@ namespace DotNetLib
         private static void DownloadUnity()
         {
             _logger.LogInformation("Downloading Unity");
-            var source = UnityDownloadUrl.Replace("{VERSION}", $"{UnityVersion.Major}.{UnityVersion.Minor}.{UnityVersion.Build}");
+            var source = UnityDownloadUrl.Replace("{VERSION}", $"{UnityVersion[0]}.{UnityVersion[1]}.{UnityVersion[2]}");
 
             Directory.CreateDirectory(UnityLibsPath);
             foreach (var enumerateFile in Directory.EnumerateFiles(UnityLibsPath, "*.dll")) File.Delete(enumerateFile);
@@ -298,10 +284,6 @@ namespace DotNetLib
                     HashString(md5, Path.GetFileName(file));
                     HashFile(md5, file);
                 }
-
-            // Hash some common dependencies as they can affect output
-            HashString(md5, typeof(InteropAssemblyGenerator).Assembly.GetName().Version.ToString());
-            HashString(md5, typeof(Cpp2IlApi).Assembly.GetName().Version.ToString());
 
             md5.TransformFinalBlock(new byte[0], 0, 0);
 

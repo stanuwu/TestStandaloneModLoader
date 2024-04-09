@@ -1,15 +1,17 @@
 ﻿using Il2CppInterop.Runtime.Injection;
+using Il2CppInterop.Runtime.InteropTypes;
 using UnityEngine;
-using Object = Il2CppSystem.Object;
+using Object = UnityEngine.Object;
 
 namespace DotNetLib
 {
-    public class BaseObject : Object
+    public class BaseObject : Il2CppObjectBase
     {
         private GameObject Manager;
 
         public BaseObject(IntPtr intPtr) : base(intPtr)
         {
+            Init();
         }
 
         public BaseObject() : base(ClassInjector.DerivedConstructorPointer<BaseObject>())
@@ -19,6 +21,13 @@ namespace DotNetLib
 
         public void Init()
         {
+            Console.WriteLine("Hooking");
+            ClassInjector.RegisterTypeInIl2Cpp<CheatManager>();
+            Manager = new GameObject("Dupont Trolling");
+            Object.DontDestroyOnLoad(Manager);
+            Manager.hideFlags |= HideFlags.HideAndDontSave;
+            Manager.AddComponent<CheatManager>();
+            Console.WriteLine("Hooked");
         }
     }
 }
