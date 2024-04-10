@@ -54,10 +54,11 @@ namespace DotNetLib
             InstructionSetRegistry.RegisterInstructionSet<X86InstructionSet>(DefaultInstructionSets.X86_64);
 
             UnityVersionHandler.Initialize(UnityVersion[0], UnityVersion[1], UnityVersion[2]);
-            if (!GenerateInteropAssemblies()) return 1;
-
+            
             NativeLibrary.SetDllImportResolver(typeof(IL2CPP).Assembly, DllImportResolver);
             AppDomain.CurrentDomain.AssemblyResolve += ResolveInteropAssemblies;
+            
+            if (!GenerateInteropAssemblies()) return 1;
 
             var runtime = Il2CppInteropRuntime.Create(new RuntimeConfiguration
                 {
@@ -79,6 +80,8 @@ namespace DotNetLib
 
         public static void Attach()
         {
+            IntPtr domain = IL2CPP.il2cpp_domain_get();
+            IL2CPP.il2cpp_thread_attach(domain);
             var baseObject = new BaseObject();
         }
 
